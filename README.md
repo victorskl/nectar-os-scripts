@@ -1,4 +1,8 @@
-# nectar openstack scripts
+# NeCTAR OpenStack Scripts
+
+How to NeCTAR OpenStack CLI clients and miscellaneous utility scripts that wrap around of this.
+
+## Setup
 
 - Should have Python; if not:
 
@@ -12,8 +16,6 @@
     bash install.sh
     ```
     
-- Populate tenants/projects name in `list.txt`
-
 - Create `.username` file and add login name there e.g.:
     
     ```
@@ -30,7 +32,13 @@
     - navigate on to the Password Reset Form by clicking the Reset Password tab on the left hand side of the screen 
     - on the Password Reset Form click the Reset Password button. There will be NO confirmation asked.
     
-    The Password Reset Form will now display your new generated password to you.
+    The Password Reset Form will now display your newly generated password to you.
+    
+    You cannot view your existing password. It will only be shown to you when you first generate it. It is up to you to remember or manage your password well.
+    
+    Resetting your password generates a new password for you to use and manage. Any API applications or CLI scripts or service provider accounts you may have created in the past, that are set up with the old password will be denied API/CLI/service access until you configure them to use your new password.
+
+    ___Note: You can generate as many time as you like. The successive  password will revoke all previous ones.___
 
 - Create `.passwd` file and add the password there e.g.:
 
@@ -38,10 +46,63 @@
     echo "My-PASSWORD-GENERATED-FROM-DASHBOARD" > .passwd
     ```
 
-- Then run the `checkup.sh`
+## Usage
+
+### Checkup Instances in Projects
+
+- Populate tenants/projects name in `list.txt`
+
+- Run the `checkup.sh`
 
     ```
     bash checkup.sh
     ```
+   
+### Using OpenStack clients directly
+
+- Source the `env.sh`
     
-EoF
+    ```
+    source env.sh
+    ```
+    
+- Using Nova
+
+    ```
+    nova --os-project-name=CCC2018-18 list
+    ```
+
+- Using OpenStack
+
+    ```
+    openstack project list
+    
+    echo $OS_USERNAME
+    openstack user show $OS_USERNAME
+    ```
+
+- Export default project/tenancy
+
+    ```
+    export OS_PROJECT_NAME=CCC2018-18
+    ```
+
+- Then
+
+    ```
+    nova list
+    cinder list
+    
+    openstack server list
+    openstack volume list
+    
+    openstack help
+    ```
+
+
+---
+
+REF
+
+- https://docs.openstack.org/newton/user-guide/cli.html
+- https://docs.openstack.org/python-openstackclient/latest/
