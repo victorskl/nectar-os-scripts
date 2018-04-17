@@ -35,7 +35,7 @@
 - Create `.passwd` file and add the password there e.g.:
 
     ```
-    cat "My-PASSWORD-GENERATED-FROM-DASHBOARD" > .passwd
+    echo "My-PASSWORD-GENERATED-FROM-DASHBOARD" > .passwd
     ```
 
 - Then run the `checkup.sh`
