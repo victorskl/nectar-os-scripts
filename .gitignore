@@ -1,0 +1,7 @@
+rc
+.passwd
+.username
+.venv
+
+.idea
+*.iml
