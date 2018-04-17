@@ -4,6 +4,13 @@ How to NeCTAR OpenStack CLI clients and miscellaneous utility scripts that wrap 
 
 ## Setup
 
+- Git checkout or [download in zip](https://github.com/victorskl/nectar-os-scripts/archive/master.zip)
+
+    ```
+    git clone https://github.com/victorskl/nectar-os-scripts.git
+    cd nectar-os-scripts
+    ```
+
 - Should have Python; if not:
 
     ```
