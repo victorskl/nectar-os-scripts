@@ -4,6 +4,13 @@ my $file = $ARGV[0] or die "Need csv file";
 
 open(my $data, '<', $file) or die "Could not open file";
 
+my @lostSouls;
+my @lsPName;
+my @lsEmail;
+my @lsAEmail;
+my @lsAUser;
+my $lsc = 0;
+my $lscnt = 0;
 while (my $line = <$data>) {
 	chomp $line;
 	
@@ -23,24 +30,75 @@ while (my $line = <$data>) {
 		print "Skipping - Empty Username \n";
 	}
 	else {
+		my $added = 0;
 		print "Attempting to add $userName to $projectName ...\n";
 		my $userEmail = $userName . '@student.unimelb.edu.au';
-		#print "openstack role add --user $userEmail --project $projectId Memeber \n";
-		my $output = `openstack role add --user $userEmail --project $projectId Member`;
-		print "Output: $output \n";
 
-		if($actualEmail ne "") {
+		my $output = `openstack role add --user $userEmail --project $projectId Member 2>&1`;
 
-			print "Attemping using actual email : [ $actualEmail ] ...\n";
-			my $output = `openstack role add --user $actualEmail --project $projectId Member`;
-
-			print "Output: $output \n";
+		if($output eq "") {
+			print "Command Successful\n";
+			$added = 1;
 		}
-		if(($actualUserName ne "") && ($actualUserName ne $userName)) {
-			print "Attempting using actual username : [ $actualUserName ] ... \n";	
-			my $actualUserEmail = $actualUserName . '@student.unimelb.edu.au';
-			my $output = `openstack role add --user $actualUserEmail --project $projectId Member`;
-			print "Output: $output \n";
+		else {
+
+			print "WARNING: Could not add $userEmail : $output \n";
 		}
+ 
+		if($added == 0) {
+			if($actualEmail ne "") {
+				print "Attemping using actual email : [ $actualEmail ] ...\n";
+				my $output = `openstack role add --user $actualEmail --project $projectId Member 2>&1`;
+
+				if($output eq "") {
+					print "Command Successful\n";
+					$added = 1;
+				}
+				else {
+					print "WARNING: Could not add $actualEmail : $output \n";
+				}
+			}
+
+			if($added == 0) {
+				if(($actualUserName ne "") && ($actualUserName ne $userName)) {
+					print "Attempting using actual username : [ $actualUserName ] ... \n";	
+					my $actualUserEmail = $actualUserName . '@student.unimelb.edu.au';
+					my $output = `openstack role add --user $actualUserEmail --project $projectId Member`;
+					print "Output: $output \n";
+					if($output eq "") {
+						print "Command Successful\n";
+						$added = 1;
+					}
+					else {
+						print "WARNING: Could not add $actualUserEmail : $output \n";
+					}
+				}
+
+			}
+		}
+
+		print "Added: $added \n";
+		if($added == 0) {
+			$lsPName[$lscnt] = $projectName;
+			$lsEmail[$lscnt] = $userEmail;
+			$lsAEmail[$lscnt] = $actualEmail;;
+			$lsAUser[$lscnt] = $actualUserName;
+
+
+			$lscnt++;
+			#save for report
+		}
+		$added = 0;
 	}
 }
+
+my $lsc = @lostSouls;
+
+print "\n\n lost souls : $lsc \n";
+
+for(my $i=0; $i< $lscnt ; $i++) {
+
+	print "Unable to add student to $lsPName[$i] : Entered Email: [ $lsEmail[$i]  ], Actual Email: [ $lsAEmail[$i] ], Username: [ $lsAUser[$i]] \n";
+}
+
+
