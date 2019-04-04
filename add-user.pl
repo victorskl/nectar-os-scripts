@@ -13,7 +13,10 @@ while (my $line = <$data>) {
 	my $projectId = $fields[3];
 	my $userName = $fields[5];
 
-    $ENV{'OS_PROJECT_NAME'} = $projectName;
+	my $actualUserName = $fields[8];
+	my $actualEmail = $fields[7];
+
+	$ENV{'OS_PROJECT_NAME'} = $projectName;
 
 	chomp $userName;	
 	if($userName eq "") {
@@ -24,6 +27,20 @@ while (my $line = <$data>) {
 		my $userEmail = $userName . '@student.unimelb.edu.au';
 		#print "openstack role add --user $userEmail --project $projectId Memeber \n";
 		my $output = `openstack role add --user $userEmail --project $projectId Member`;
-		print "Output: $output \n"
+		print "Output: $output \n";
+
+		if($actualEmail ne "") {
+
+			print "Attemping using actual email : [ $actualEmail ] ...\n";
+			my $output = `openstack role add --user $actualEmail --project $projectId Member`;
+
+			print "Output: $output \n";
+		}
+		if(($actualUserName ne "") && ($actualUserName ne $userName)) {
+			print "Attempting using actual username : [ $actualUserName ] ... \n";	
+			my $actualUserEmail = $actualUserName . '@student.unimelb.edu.au';
+			my $output = `openstack role add --user $actualUserEmail --project $projectId Member`;
+			print "Output: $output \n";
+		}
 	}
 }
