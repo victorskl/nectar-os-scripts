@@ -1,5 +1,8 @@
 #!/usr/bin/perl
 
+# CSV Input Format (see add-user.csv.sample)
+# INDEX_NUM,TEAM_NUMBER,PROJECT_NAME,PROJECT_ID,ENTERED_EMAIL,EXTRACTED_USERNAME,BLANK,LOOKUP_EMAIL,LOOKUP_USERNAME,|
+
 my $file = $ARGV[0] or die "Need csv file";
 
 open(my $data, '<', $file) or die "Could not open file";
